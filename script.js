@@ -49,7 +49,7 @@ function updateToastsOnDOM() {
     toastEl.classList.add("toast");
     toastEl.id = key;
     toastEl.textContent = value;
-    toasterEl.appendChild(toastEl);
+    toasterEl.prepend(toastEl);
   }
 }
 
