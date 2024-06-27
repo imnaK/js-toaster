@@ -5,10 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pure JS Toast System</title>
     <link rel="stylesheet" href="style.css" />
+    <script src="toaster.js"></script>
   </head>
   <body>
     <h1>Simple Website</h1>
-    <button onclick="this.setAttribute('data-count', +this.getAttribute('data-count') + 1);addToast('Hello World: ' + this.getAttribute('data-count'));" data-count="0">Add Toast</button>
-    <script src="script.js"></script>
+    <button onclick="this.setAttribute('data-count', +this.getAttribute('data-count') + 1);toaster.addToast('Hello World: ' + this.getAttribute('data-count'));" data-count="0">Add Toast</button>
+    <script>
+      const toaster = new Toaster();
+      toaster.addToast("This is going to stay a bit. >:)", 100000);
+    </script>
   </body>
 </html>
