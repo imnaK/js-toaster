@@ -1,0 +1,18 @@
+body {
+  margin: 4rem;
+  background-color: #2f2f3f;
+  color: aliceblue;
+}
+
+#toaster {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #fff3;
+}
+
+#toaster > .toast {
+  padding: .5rem;
+  background-color: #7ff3;
+}
