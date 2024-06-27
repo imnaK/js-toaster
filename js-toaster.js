@@ -1,9 +1,11 @@
 class Toaster {
+  #options;
   #toasterId;
   #toasts;
+  #toasterElement;
 
-  constructor(parentElement = document.body, defaultTimeout) {
-    this.defaultTimeout = defaultTimeout > 0 ? defaultTimeout : 10000;
+  constructor(parentElement = document.body, options = {}) {
+    this.#options = this.#getSanitizedOptions(options);
     this.#toasterId = this.#getUUIDv4();
     this.#toasts = {};
 
@@ -19,11 +21,43 @@ class Toaster {
     );
   }
 
+  #getSanitizedOptions(options) {
+    const isPositiveNumber = (val) => typeof val === "number" && val > 0;
+    const isValidId = (val) => typeof val === "string" && val.length > 0 && !/\s/.test(val);
+
+    const defaultOptions = {
+      defaultTimeout: {
+        defaultValue: 10000,
+        sanitization: isPositiveNumber,
+      },
+      toasterPrefix: {
+        defaultValue: "toaster-",
+        sanitization: isValidId,
+      },
+      toastPrefix: {
+        defaultValue: "toast-",
+        sanitization: isValidId,
+      },
+    };
+
+    return Object.keys(defaultOptions).reduce((prev, key) => {
+      const optionValue = options.hasOwnProperty(key) && defaultOptions[key].sanitization(options[key])
+        ? options[key]
+        : defaultOptions[key].defaultValue;
+      Object.assign(prev, { [key]: optionValue });
+      return prev;
+    }, {});
+  }
+
   #initToaster(parentElement) {
-    this.toasterElemenet = document.createElement("div");
-    this.toasterElemenet.id = this.#toasterId;
-    this.toasterElemenet.classList.add("toaster");
-    parentElement.appendChild(this.toasterElemenet);
+    this.#toasterElement = document.createElement("div");
+    this.#toasterElement.id = this.getToasterElementId();
+    this.#toasterElement.classList.add("toaster");
+    parentElement.appendChild(this.#toasterElement);
+  }
+
+  getOptions() {
+    return this.#options;
   }
 
   getToasterId() {
@@ -34,34 +68,47 @@ class Toaster {
     return this.#toasts;
   }
 
-  addToast(message, timeout = this.defaultTimeout) {
+  getToasterElement() {
+    return this.#toasterElement;
+  }
+
+  getToasterElementId() {
+    return this.#options.toasterPrefix + this.#toasterId;
+  }
+
+  getToastElementId(toastId) {
+    if (!this.#toasts.hasOwnProperty(toastId)) return;
+    return this.#options.toastPrefix + toastId;
+  }
+
+  addToast(message, timeout = this.#options.defaultTimeout) {
     const toastId = this.#getUUIDv4();
     this.#toasts[toastId] = message;
     setTimeout(() => {
       this.removeToast(toastId);
-    }, timeout > 0 ? timeout : this.defaultTimeout);
+    }, timeout > 0 ? timeout : this.#options.defaultTimeout);
     this.updateToasts();
   }
 
   removeToast(toastId) {
     if (!this.#toasts.hasOwnProperty(toastId)) return;
+    this.#toasterElement.querySelector("#" + this.getToastElementId(toastId)).remove();
     delete this.#toasts[toastId];
-    this.updateToasts();
   }
 
   // TODO: only remove/add necessary toasts for better performance
   updateToasts() {
     // remove all toasts
-    while (this.toasterElemenet.firstChild)
-      this.toasterElemenet.removeChild(this.toasterElemenet.firstChild);
+    while (this.#toasterElement.firstChild)
+      this.#toasterElement.removeChild(this.#toasterElement.firstChild);
 
     // add all toasts
     for (const [key, value] of Object.entries(this.#toasts)) {
-      let toastElemenet = document.createElement("div");
-      toastElemenet.id = key;
-      toastElemenet.classList.add("toast");
-      toastElemenet.textContent = value;
-      this.toasterElemenet.prepend(toastElemenet);
+      let toastElement = document.createElement("div");
+      toastElement.id = this.getToastElementId(key);
+      toastElement.classList.add("toast");
+      toastElement.textContent = value;
+      this.#toasterElement.prepend(toastElement);
     }
   }
 }
