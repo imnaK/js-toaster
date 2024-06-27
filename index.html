@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Simple Website</h1>
-    <button onclick="addToast('Hello World')" data-count="0">Add Toast</button>
+    <button onclick="this.setAttribute('data-count', +this.getAttribute('data-count') + 1);addToast('Hello World: ' + this.getAttribute('data-count'));" data-count="0">Add Toast</button>
     <script src="script.js"></script>
   </body>
 </html>
