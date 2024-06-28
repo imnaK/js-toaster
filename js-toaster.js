@@ -106,6 +106,10 @@ class Toaster {
     return this.#toasts[toastId].message;
   }
 
+  getAllToastIds() {
+    return Object.keys(this.#toasts);
+  }
+
   /**
    * Adds a new toast message to the Toaster.
    * @param {string} message - The message to display in the toast.
@@ -152,6 +156,10 @@ class Toaster {
     } catch (error) {
       console.error("JS-Toaster Error: There is no toast with id", toastId);
     }
+  }
+  removeAllToasts() {
+    for (const key of Object.keys(this.#toasts))
+      this.removeToast(key);
   }
 }
 
