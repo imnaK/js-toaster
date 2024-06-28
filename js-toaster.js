@@ -92,7 +92,7 @@ class Toaster {
   }
 
   /**
-   * Get the Toaster (wrapper) elements id. Does match with the DOM.
+   * Get the Toaster (wrapper) elements id. Does match with the DOM id.
    * @returns {string} The Toaster id as a string.
    */
   getToasterId() {
@@ -171,7 +171,7 @@ class Toaster {
 
   /**
    * Removes a specific toast from the Toaster.
-   * @param {string} toastId - The ID of the toast to remove.
+   * @param {string} toastId - The id of the toast to remove. Does match with the DOM id.
    */
   removeToast(toastId) {
     if (!this.#toasts.hasOwnProperty(toastId)) return;
