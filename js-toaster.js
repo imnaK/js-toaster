@@ -110,6 +110,7 @@ class Toaster {
    * Adds a new toast message to the Toaster.
    * @param {string} message - The message to display in the toast.
    * @param {number} [timeout=this.#options.defaultTimeout] - The time after which the toast should disappear.
+   * @returns {string} The id the toast was created with. Consist of the toastPrefix from options plus a generated "UUIDv4".
    */
   addToast(message, timeout = this.#options.defaultTimeout) {
     const toastId = this.#getId(this.#options.toastPrefix);
@@ -122,7 +123,7 @@ class Toaster {
     toastElement.textContent = message;
     this.#toasterElement.prepend(toastElement);
 
-    // add to reference object to keep track of it.
+    // Adds toastId and its message to the toasts object to keep track of it. Also sets the timeout and also puts it in the toasts object.
     this.#toasts[toastId] = {
       message: message,
       timeout: setTimeout(() => {
