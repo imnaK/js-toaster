@@ -130,6 +130,8 @@ class Toaster {
         this.removeToast(toastId);
       }, timeout > 0 ? timeout : this.#options.defaultTimeout),
     };
+
+    return toastId;
   }
 
   /**
