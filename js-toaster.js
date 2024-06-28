@@ -161,7 +161,6 @@ class Toaster {
     this.#toasts[toastId] = {
       message: message,
       timeout: setTimeout(() => {
-        console.log("executing setTimeout for id", toastId);
         this.removeToast(toastId);
       }, timeout > 0 ? timeout : this.#options.defaultTimeout),
     };
