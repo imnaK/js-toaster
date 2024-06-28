@@ -76,6 +76,14 @@ class Toaster {
     return this.#toasterElement;
   }
 
+  getToastCount() {
+    return Object.keys(this.#toasts).length;
+  }
+
+  getToastMessage(toastId) {
+    return this.#toasts[toastId];
+  }
+
   addToast(message, timeout = this.#options.defaultTimeout) {
     const toastId = this.#getId(this.#options.toastPrefix);
     this.#toasts[toastId] = message;
