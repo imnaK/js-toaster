@@ -33,6 +33,7 @@ class Toaster {
   }
 
   #getUUIDv4() {
+    // i am not sure about this uuidv4 gen
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
       (
         c ^
@@ -82,30 +83,59 @@ class Toaster {
     parentElement.appendChild(this.#toasterElement);
   }
 
+  /**
+   * Get the current options this Toaster is running with.
+   * @returns {Object} The options. E.g.: `defaultTimeout`, `toasterPrefix` and `toastPrefix` as keys.
+   */
   getOptions() {
     return this.#options;
   }
 
+  /**
+   * Get the Toaster (wrapper) elements id. Does match with the DOM.
+   * @returns {string} The Toaster id as a string.
+   */
   getToasterId() {
     return this.#toasterId;
   }
 
+  /**
+   * Get all current toast ids with their messages and timeouts.
+   * @returns {Object} The Object with the toast ids as the keys and the values as Objects holding inner the keys `message` for the message and `timeout` holding a reference to the active waiting timeout not yet triggered.
+   */
   getToasts() {
     return this.#toasts;
   }
 
+  /**
+   * Get the Toaster (wrapper) element of the toasts.
+   * @returns {HTMLElement} The Toaster/Wrapper HTMLElement in the DOM.
+   */
   getToasterElement() {
     return this.#toasterElement;
   }
 
+  /**
+   * Get the current count of all toasts.
+   * @returns {number} The count of all toasts.
+   */
   getToastCount() {
     return Object.keys(this.#toasts).length;
   }
 
+  /**
+   * Get the message of a specific toast.
+   * @param {string} toastId - The id of the toast to get the message from. Does match with the DOM id.
+   * @returns {string} The message as a string.
+   */
   getToastMessage(toastId) {
     return this.#toasts[toastId].message;
   }
 
+  /**
+   * Get all current toast ids.
+   * @returns {Array} The Array of toast ids (strings).
+   */
   getAllToastIds() {
     return Object.keys(this.#toasts);
   }
@@ -157,6 +187,10 @@ class Toaster {
       console.error("JS-Toaster Error: There is no toast with id", toastId);
     }
   }
+
+  /**
+  * Removes all toasts from the Toaster.
+  */
   removeAllToasts() {
     for (const key of Object.keys(this.#toasts))
       this.removeToast(key);
