@@ -11,8 +11,27 @@
     <h1>Simple Website</h1>
     <button onclick="this.setAttribute('data-count', +this.getAttribute('data-count') + 1);toaster.addToast('Hello World: ' + this.getAttribute('data-count'));" data-count="0">Add Toast</button>
     <script>
+      // initialize a new toaster - will append to body by default
       const toaster = new Toaster();
-      toaster.addToast("This is going to stay a bit. >:)", 100000);
+
+      // get the current toaster options
+      console.table(toaster.getOptions());
+
+      // add a new toast with a custom timeout
+      toaster.addToast("This is going to stay a bit longer.", 100000);
+
+      // add a new toast and get the id of it
+      const bananaToastId = toaster.addToast("🍌 Banana 🍌");
+      console.log("bananaToastId:", bananaToastId);
+
+      // print a toasts message by its id
+      console.log("Message from toast with bananaToastId:", toaster.getToastMessage(bananaToastId));
+
+      // print the current toast count (should be 2 at this point)
+      console.log("toastCount:", toaster.getToastCount());
+
+      // remove a toast - commented out to not scare away the bananaToast
+      //toaster.removeToast(bananaToastId);
     </script>
   </body>
 </html>
