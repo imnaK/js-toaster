@@ -1,11 +1,27 @@
+/**
+ * Represents a Toaster, a system for displaying short messages (toasts) to a user.
+ * @class
+ */
 class Toaster {
   #options;
   #toasterId;
   #toasts;
   #toasterElement;
 
+  /**
+   * Valid options are:
+   * {
+   *   defaultTimeout: number,
+   *   toasterPrefix: string,
+   *   toastPrefix: string,
+   * }
+   * where defaultTimeout is measured in milliseconds.
+   * @constructor
+   * @param {HTMLElement} [parentElement=document.body] - The parent HTML element where the toaster will be appended.
+   * @param {Object} [options={}] - The options for initializing the Toaster. If no options are passed, it will use default options in place.
+   */
   constructor(parentElement = document.body, options = {}) {
-    this.#options = this.#getSanitizedOptions(options);
+    this.#options = this.#getValidatedOptions(options);
     this.#toasterId = this.#getId(this.#options.toasterPrefix);
     this.#toasts = {};
 
@@ -25,7 +41,13 @@ class Toaster {
     );
   }
 
-  #getSanitizedOptions(options) {
+  /**
+   * Loops over options and validates the keys and values. If options are not valid, it uses default values in place.
+   * @private
+   * @param {Object} options - The options object.
+   * @returns {Object} - A new object with validated and filled-in options.
+   */
+  #getValidatedOptions(options) {
     const isPositiveNumber = (val) => typeof val === "number" && val > 0;
     const isValidId = (val) => typeof val === "string" && val.length > 0 && !/\s/.test(val);
 
@@ -84,16 +106,23 @@ class Toaster {
     return this.#toasts[toastId].message;
   }
 
+  /**
+   * Adds a new toast message to the Toaster.
+   * @param {string} message - The message to display in the toast.
+   * @param {number} [timeout=this.#options.defaultTimeout] - The time after which the toast should disappear.
+   */
   addToast(message, timeout = this.#options.defaultTimeout) {
     const toastId = this.#getId(this.#options.toastPrefix);
     message = String(message);
 
+    // create the HTML toast element.
     let toastElement = document.createElement("div");
     toastElement.id = toastId;
     toastElement.classList.add("toast");
     toastElement.textContent = message;
     this.#toasterElement.prepend(toastElement);
 
+    // add to reference object to keep track of it.
     this.#toasts[toastId] = {
       message: message,
       timeout: setTimeout(() => {
@@ -103,6 +132,10 @@ class Toaster {
     };
   }
 
+  /**
+   * Removes a specific toast from the Toaster.
+   * @param {string} toastId - The ID of the toast to remove.
+   */
   removeToast(toastId) {
     if (!this.#toasts.hasOwnProperty(toastId)) return;
     clearTimeout(this.#toasts[toastId].timeout);
