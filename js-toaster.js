@@ -81,12 +81,12 @@ class Toaster {
   }
 
   getToastMessage(toastId) {
-    return this.#toasts[toastId];
+    return this.#toasts[toastId].message;
   }
 
   addToast(message, timeout = this.#options.defaultTimeout) {
     const toastId = this.#getId(this.#options.toastPrefix);
-    this.#toasts[toastId] = message;
+    message = String(message);
 
     let toastElement = document.createElement("div");
     toastElement.id = toastId;
@@ -94,13 +94,18 @@ class Toaster {
     toastElement.textContent = message;
     this.#toasterElement.prepend(toastElement);
 
-    setTimeout(() => {
-      this.removeToast(toastId);
-    }, timeout > 0 ? timeout : this.#options.defaultTimeout);
+    this.#toasts[toastId] = {
+      message: message,
+      timeout: setTimeout(() => {
+        console.log("executing setTimeout for id", toastId);
+        this.removeToast(toastId);
+      }, timeout > 0 ? timeout : this.#options.defaultTimeout),
+    };
   }
 
   removeToast(toastId) {
     if (!this.#toasts.hasOwnProperty(toastId)) return;
+    clearTimeout(this.#toasts[toastId].timeout);
     delete this.#toasts[toastId];
     this.#removeToastElement(toastId);
   }
