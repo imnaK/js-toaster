@@ -143,7 +143,7 @@ class Toaster {
   /**
    * Adds a new toast message to the Toaster.
    * @param {string} message - The message to display in the toast.
-   * @param {number} [timeout=this.#options.defaultTimeout] - The time after which the toast should disappear.
+   * @param {number} [timeout=this.#options.defaultTimeout] - The time after which the toast should disappear in ms.
    * @returns {string} The id the toast was created with. Consist of the toastPrefix from options plus a generated "UUIDv4".
    */
   addToast(message, timeout = this.#options.defaultTimeout) {
