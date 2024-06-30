@@ -181,7 +181,7 @@ class Toaster {
 
   #removeToastElement(toastId) {
     try {
-      this.#toasterElement.querySelector("#" + toastId).remove();
+      document.getElementById(toastId).remove();
     } catch (error) {
       console.error("JS-Toaster Error: There is no toast with id", toastId);
     }
