@@ -11,8 +11,15 @@
     <h1>Simple Website</h1>
     <button onclick="this.setAttribute('data-count', +this.getAttribute('data-count') + 1);toaster.addToast('Hello World: ' + this.getAttribute('data-count'));" data-count="0">Add Toast</button>
     <script>
+      // create a close element for the toast messages. must be a HTMLElement, will be ignored and not added if it is not.
+      let closeElement = document.createElement("button");
+      closeElement.textContent = "[X]";
+
       // initialize a new toaster - will append to body by default
-      const toaster = new Toaster();
+      const toaster = new Toaster(
+        document.body,
+        closeElement,
+      );
 
       // get the current toaster options
       console.table(toaster.getOptions());

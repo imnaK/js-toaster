@@ -7,6 +7,7 @@ class Toaster {
   #toasterId;
   #toasts;
   #toasterElement;
+  #closeElementTemplate;
 
   /**
    * Valid options are:
@@ -17,13 +18,18 @@ class Toaster {
    * }
    * where defaultTimeout is measured in milliseconds.
    * @constructor
-   * @param {HTMLElement} [parentElement=document.body] - The parent HTML element where the toaster will be appended.
+   * @param {HTMLElement} [parentElement=document.body] - The parent HTMLElement where the toaster will be appended.
+   * @param {HTMLElement} [closeElement=null] - null to add no extra closeElement. Any HTMLElement will be appended to the toast Elemenet.
    * @param {Object} [options={}] - The options for initializing the Toaster. If no options are passed, it will use default options in place.
    */
-  constructor(parentElement = document.body, options = {}) {
+  constructor(parentElement = document.body, closeElement = null, options = {}) {
     this.#options = this.#getValidatedOptions(options);
     this.#toasterId = this.#getId(this.#options.toasterPrefix);
     this.#toasts = {};
+    if (closeElement instanceof HTMLElement) {
+      this.#closeElementTemplate = closeElement;
+      this.#closeElementTemplate.classList.add("toast-close");
+    }
 
     this.#initToaster(parentElement);
   }
@@ -150,11 +156,24 @@ class Toaster {
     const toastId = this.#getId(this.#options.toastPrefix);
     message = String(message);
 
-    // create the HTML toast element.
+    // create the toast HTMLElement.
     let toastElement = document.createElement("div");
     toastElement.id = toastId;
     toastElement.classList.add("toast");
-    toastElement.textContent = message;
+    // add message wrapper
+    let toastMessageElement = document.createElement("span");
+    toastMessageElement.classList.add("toast-message");
+    toastMessageElement.textContent = message;
+    toastElement.appendChild(toastMessageElement);
+    // add closeElement if present
+    if (this.#closeElementTemplate) {
+      let closeElement = this.#closeElementTemplate.cloneNode(true);
+      closeElement.addEventListener("click", (mouseEvent) => {
+        this.removeToast(toastId);
+      });
+      toastElement.appendChild(closeElement);
+    }
+
     this.#toasterElement.prepend(toastElement);
 
     // Adds toastId and its message to the toasts object to keep track of it. Also sets the timeout and also puts it in the toasts object.
