@@ -215,3 +215,5 @@ class Toaster {
   }
 }
 
+export default Toaster;
+
