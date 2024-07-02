@@ -215,5 +215,5 @@ class Toaster {
   }
 }
 
-export default Toaster;
+//export default Toaster;
 
