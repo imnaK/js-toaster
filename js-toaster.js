@@ -168,7 +168,7 @@ class Toaster {
     // add closeElement if present
     if (this.#closeElementTemplate) {
       let closeElement = this.#closeElementTemplate.cloneNode(true);
-      closeElement.addEventListener("click", (mouseEvent) => {
+      closeElement.addEventListener("click", () => {
         this.removeToast(toastId);
       });
       toastElement.appendChild(closeElement);
